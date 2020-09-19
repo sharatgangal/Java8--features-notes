@@ -1,0 +1,519 @@
+1.lambda expression
+2.functional interface
+3.default methods in interface
+4.static methods in interface
+5.predicate - predifined functinal interface
+6.Function- predifined functional interface
+7.consumer - predifined functional interface
+8. method reference & constructor reference 
+	by double colon operator(::)
+9.Stream API--> bulk operation on collection
+10.Date and time API(Joda.API)
+			BY joda.org
+WHy?
+1.to simplify the programming
+2.to enable functional programming in the form of lambda functions
+3.to enable parallel programming
+_____________________________________________________________________________________________________________________
+											LAMBDA EXPRESSION
+	1.To write more readable , maintainable, and conside code.
+	2.to enable functinal programmig.
+	3.to enable parallel processing.
+	4.LISP is the first proarmming lan to use lamba function and java was the last language to use lambada function
+_____________________________________________________________________________________________________________________
+	1. WHAT IS LAMBDA EXPRESSION?
+		is is anonymous function.(nameless function)
+		. no name
+		. no modifiers
+		. no return type
+	1. Write the lambada expression to print hello world.		[WITHOUT ARGS]
+		
+		IN the normal java method....
+		public void test()
+		{
+		  System.out.println("hello");
+		}
+		
+		After applying the concept of the lambada function
+		
+		()  {  System.out.println("hello"); }   HERE we need to add the Symbol (->)  
+		
+					() -> {  System.out.println("hello"); };
+	-----------------------------------------------------------------------------------------------					
+	
+	2. WRITE A LAMBADA FUNCTION WHICH TAKES TWO int VALUE AND print  THE SUM.	[WITH ARGS]
+	
+	JAVA METHOD: public int test(int n1,int n2)
+	{
+		syso(n1+n2);
+	}
+	LAMBADA FUNCTION:
+		(int n1,int n2) -> {syso(n1+n2)};
+	----------------------------------------------------------------------------------------------
+	3.WRITE A LAMBADA FUNCTION  WHICH WILL TAKE THE INPUT AND RETURN THE VALUE  [WITH RETURN VALUE]
+	 
+	 JAVA METHOD:
+	 public int getLength(String s1)
+		{
+		return s1.length();
+		}
+	LAMBADA FUNCTION:
+	(String s1)-> {return s1.length();}
+	
+	NOTE: 1.if the body contains the one statement then no need for the curly braces.
+			{} not required for the function which having only one statement
+		  2. base on the content the compiler can guess the type of arguments
+				this is called as:Type Inference
+				ex:(int n1,int n2) -> {syso(n1+n2)};  ===> (n1,n2)-> syso(n1+n2);
+				ex:(String s1)-> {return s1.length();} ==>(s)->s.length();====> s-> s.length();
+					here return type is not required, 
+					if the args is only one then no () required.
+	SUMMARY:
+	1.it ca take any no of charectoristics
+	2.if multi parameters are available then they should be seperated by the ","
+	3.if only one arguments is present the parenthisis is optional
+	4.we can specify the type of the parameter if the compliler can check the type based on the 
+		context then we can remove the data type.[Type Inference]
+	5.if the function has multiple statements the n they should be enclosed in "{}"
+	6.there is no need to add the return statement.
+	===============================================================================================================================================
+									FUNCTIONAL INTERFACE
+	The interface which contains only one inteface
+	1.Runnable				--->run()
+	2.Callable				--->call()
+	3.ActionListener		--->actionPerformed()
+	4.Comparable			--->compareTo()
+				so the interface which contains only single abstract method are called functional interface, 
+				But it can have any number of default  method and any number of static method
+				
+				USE:the functional interface are used to invoke lambda functions
+	
+	To declare the functional interface.
+	1. use @FunctionalInterface
+		if we write this annotation and the compailer will make sure that the interface is having the only one 
+		abstract method.
+		
+		it is not mandotary to have the @FunctionalInterface
+	2.	The Child Interface is also the functional if it is inheriting the only one abstract method 
+	3.  The Child Interface is also the functional if it is inheriting the only one abstract method and
+		reDeclaring the same method.
+	4. you will not get any Exception if don't mention the @FunctionalInterface
+	5. if the interface is declared  @FunctionalInterface then it should contain only one
+		abstract method at any point of time.
+	_____________________________________________________________________________________________________________________
+									INVOKING THE FUNCTIONAL INTERFACE WITH FUNCTIONAL INTERFACE
+									
+	package com.dxc.threads;
+
+public class LambdaThead {
+
+	public static void main(String[] args) {
+		Runnable r=()->{
+			for (int i = 0; i < 10; i++) {
+			System.out.println("i am child thread");
+		}};
+		
+		Thread t1= new Thread(r);
+		t1.run();
+		for (int i = 0; i <10; i++) {
+			System.out.println("i am in the parent thread");
+		}
+		
+	}
+}
+_____________________________________________________________________________________________________________________
+package com.dxc.lambda;
+
+@FunctionalInterface
+public interface DemoLambda {
+	
+	public void test();
+}
+------------------------------------
+package com.dxc.lambda.main;
+
+import com.dxc.lambda.DemoLambda;
+import com.dxc.lambda.LambdaWithArgs;
+import com.dxc.lambda.LambdaWithReturnType;
+
+public class Application {
+	
+	public static void main(String[] args) 
+	{
+		//with args
+		DemoLambda ref = ()->System.out.println("this is the demo method of the lambda function");
+		ref.test();
+		
+		// with args 
+//		LambdaWithArgs ref2=(int n1, int n2)->{System.out.println("the sum of "+n1 +" and "+n2+" is = "+(n1+n2));};
+//		ref2.sum(10,20);
+		
+		LambdaWithArgs ref2=(n1,n2)->System.out.println("the sum of "+n1 +" and "+n2+" is = "+(n1+n2));
+		ref2.sum(10,20);
+		
+		//with return type
+		LambdaWithReturnType ref3=s1->s1.length();
+		System.out.println("the Length of the String is :"+ref3.getLength("abcd"));
+	}
+}
+_____________________________________________________________________________________________________________________
+											LAMBDA FUNCTIONS WITH COLLECTION
+		1.List|
+		2.Set | (I)
+		3.Map |
+		
+		List: insertion order preserved
+			  duplucate objects are allowed
+			  best for Searching
+					types:	LIST:
+							1.ArrayList
+							2.LinkedList
+							3.Vector
+							4.Stack
+		
+							SET:
+							1.HashSet
+							2.TreeSet
+							
+							MAP:(key value pairs)
+							ex:rollNo   --->   studentName
+							   mobileNo --->   address
+								to put value: map.put(key,value);
+		Comparator Interface and Compare method
+		________________________________________
+		it is a functional interface having the one abstract method :compare()
+		For customised sorting
+		
+				-->public int compare(Object obj1,Object obj2)
+					this method Returns -1 if obj1 has to come before obj2
+					this method Returns 1 if obj1 has to come after obj2
+					this method Returns 0 if obj1 and obj2 are same/equal
+	___________________________________________________________________________________________________________________________________________
+		Sorting Elements of list without Lambda Expression
+		EXAMPLE 1 :
+		Without the lambda:
+		Collections.sort()---> will sort the integers in ascending order and for String will sort in alphabetical order
+		-----------------------------------------
+		Main class::
+		package com.dxc.app;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.dxc.comparator.IntegerComparator;
+
+public class Application {
+
+	public static void main(String[] args) {
+		List<Integer> l1= new ArrayList<Integer>();
+		
+		l1.add(100);
+		l1.add(200);
+		l1.add(10);
+		l1.add(500);
+		l1.add(300);
+		l1.add(100);
+		
+		System.out.println("collection before the sorting : "+l1);
+		
+		Collections.sort(l1);
+		System.out.println("collection after the Ascending sorting : "+l1);
+		
+		Collections.sort(l1,new IntegerComparator());
+		System.out.println("the collection after the Descending sorting"+l1);
+	}
+}
+	----------------------------------------------
+	comparator:
+	package com.dxc.comparator;
+
+import java.util.Comparator;
+
+public class IntegerComparator implements Comparator<Integer> {
+
+	@Override
+	public int compare(Integer o1, Integer o2) {
+		if(o1>o2)
+		{
+			return -1;
+		}
+		else if(o1<o2)
+		{
+			return 1;
+		}
+		else
+		return 0;
+	}
+}
+								ORRRRRRRR
+		package com.dxc.comparator;
+
+import java.util.Comparator;
+
+public class IntegerComparator implements Comparator<Integer> {
+
+	@Override
+	public int compare(Integer o1, Integer o2) {
+		return (o1>o2)?-1:(o1<o2)?1:0;			----> WTF
+	}
+}						
+	___________________________________________________________________________________________________________________________________________
+	
+NOTE:	Sorting with lambda sorting:
+	the whole comparator method is written in:
+	return (o1>o2)?-1:(o1<o2)?1:0;
+	_______________________________________________________________________________________________________________________
+		package com.dxc.app;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class ApplicationWithLambda {
+
+	public static void main(String[] args) {
+		List<Integer> l1= new ArrayList<Integer>();
+		
+		l1.add(100);
+		l1.add(200);
+		l1.add(10);
+		l1.add(500);
+		l1.add(300);
+		l1.add(100);
+		
+		System.out.println("collection before the sorting : "+l1);
+		
+		Collections.sort(l1);
+		System.out.println("collection after the Ascending sorting : "+l1);
+		
+		Collections.sort(l1,(o1,o2)->(o1>o2)?-1:(o1<o2)?1:0);
+		
+		System.out.println("Collection after lambda desending sorting " +l1);
+		
+		
+	}
+
+}
+______________________________________________________________________________________________________________________________________________________
+
+													SORTING IN TREE SET
+	1.TreeSet<Integer> s1=new TreeSet<Integer> ();
+	By default the sorting order in Tree set is ascending
+	
+	So inorder to get the user Sorting :
+		1.TreeSet<Integer> s1=new TreeSet<Integer> (new Compartor());
+		2.TreeSet<Integer> s1=new TreeSet<Integer> (lambda function());
+		------------------------------------------------------------------
+		package com.dxc.app;
+
+import java.util.TreeSet;
+
+public class TreeSetComparator {
+
+	public static void main(String[] args) {
+		
+		TreeSet< Integer> t1= new TreeSet<Integer>((o1,o2)->(o1>o2)?-1:(o1<o2)?1:0);
+		t1.add(10);
+		t1.add(70);
+		t1.add(80);
+		t1.add(10);
+		t1.add(50);
+		
+		System.out.println("numbers before sorting : "+t1);
+	}
+}
+______________________________________________________________________________________________________________________________________________________
+											SORTING IN MAP
+	TreeMap<int,String> t1=new TreeMap<int String>();
+______________________________________________________________________________________________________________________________________________________
+											SORTING OF THE OWN CLASS (on any fileds)
+	MODEL:
+	package com.dxc.model;
+
+public class Empolyee {
+	
+	private int empId;
+	private String empName;
+	private int empBasic;
+	
+	public Empolyee() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Empolyee(int empId, String empName, int empBasic) {
+		super();
+		this.empId = empId;
+		this.empName = empName;
+		this.empBasic = empBasic;
+	}
+
+	public int getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(int empId) {
+		this.empId = empId;
+	}
+
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+	public int getEmpBasic() {
+		return empBasic;
+	}
+
+	public void setEmpBasic(int empBasic) {
+		this.empBasic = empBasic;
+	}
+
+	@Override
+	public String toString() {
+		return "Empolyee [empId=" + empId + ", empName=" + empName + ", empBasic=" + empBasic + "]";
+	}
+}
+--------------------------------------------------------------------------------------------------
+ Main Class:
+ package com.dxc.app;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.dxc.model.Empolyee;
+
+public class CustomClassSorting {
+
+	public static void main(String[] args) {
+		Empolyee emp1=new Empolyee(2, "sharat", 10000);
+		Empolyee emp2= new Empolyee(4,"Ashwini",9000);
+		Empolyee emp3= new Empolyee(1,"Ashwini",2000);
+		Empolyee emp4= new Empolyee(3,"Tussi",200);
+		Empolyee emp5= new Empolyee(4,"Suppi",1000);
+		
+		List< Empolyee> l1 = new ArrayList<Empolyee>();
+		l1.add(emp1);
+		l1.add(emp2);
+		l1.add(emp3);
+		l1.add(emp4);
+		l1.add(emp5);
+		
+		System.out.println("all the employee without sorting : "+l1);
+		
+		Collections.sort(l1, (o1,o2)->(o1.getEmpId()>o2.getEmpId())?-1:(o1.getEmpId()<o2.getEmpId())?1:0);
+		System.out.println("all the employees after Ascending sort : "+l1);
+		
+		Collections.sort(l1, (o1,o2)->(o1.getEmpId()>o2.getEmpId())?1:(o1.getEmpId()<o2.getEmpId())?-1:0);
+		System.out.println("all the employees after Desending sort : "+l1);
+	}
+
+}
+______________________________________________________________________________________________________________________________________________________
+											DEFAULT METHODS AND STATIC METHODS IN INTERFACE
+		1.default methods are the methods with implimenatation
+		
+		
+		ex: Interface Service
+			{
+				public void test();
+				
+				//default methods:
+				default void test2()
+				{
+					syso("default method of the interface Service");
+				}
+			}
+		-------------------------------------------------------------
+		What if two interaface having the same default method if one class inherits both the interaface
+			IT CREATE A AMBIGUITY for the compailer
+		1. to provide dummy implementation / not neccesarly provide the meaningfull implimenatation
+		2.What is the feature of INTERFACE?
+		ans:	1.in interface variables are 
+						1.public final static 
+				2.in interface methods are public abstract
+				3.lambad functions are limited to interface
+				4.we can override Object class methods in interface
+				5.no constructors in interface
+				6.can't declare instance and Static block
+		SOLUTIONS:  1.override the method
+					2.or specify the method to use from parent methods
+					
+					2.-->public void commonMethod()
+							{
+								InterfaceNameYouWantToImpliment.super.commonName();
+								// if there is any return type then add the return to the above statement. 	
+							}
+	______________________________________________________________________________________________________________________________________________________
+											STATIC METHODS INSIDE THE INTERFACE:
+		IN GENERAL static methods can not be overriden
+		Can you write the interface methods in Interface?
+			Yes we can write main or any static method in interface but above 1.8 version
+		If you want to call the static method of the interface then
+		One and Only way is to you have to use InterfaceName.methodName();
+
+		if create a class that impliments interface and create a object for it and use the variable 
+		Not even the implimenation class can not call these methods
+		So use the Interface static methods use interfaceName.methodName();
+		Can't override Static methods since they are not accessible to the implementation class.
+		if the implementation class is having the same method but non static --> valid method no error
+		simillarly if the same interface method in implimenation class is having but access Specifier is private
+								-->valid method
+========================================================================================================================================================
+						PREDICATE:(pre defined functional inteface) in (java.util.function)
+	1.Predicate:to check boolean condition. returns only boolean condition
+	2.Predicate joining
+	  *It’s possible to join predicates into a single predicate by using the following methods.
+	  *and()
+	  *or()
+	  *negate()
+	  *these are exactly same as logical AND ,OR complement operators
+	   ex:package com.dxc.application;
+-------------------------------------------------------------------------------------
+import java.util.function.Predicate;
+public class App {
+	public static void main(String[] args) {
+		
+		Predicate<Integer> p1=(n1)->n1>10;
+		
+		Predicate< Integer> p2=(n1)->(n1%2==0);
+		
+		System.out.println("Is the number Greter Than 10 "+p1.test(11));
+		
+		System.out.println("Is the number Divisible by 2 "+p2.test(11));
+		
+		
+		System.out.println("Is the number Divisible by 2 "+p2.negate().test(20));
+		
+		Predicate p3=p1.and(p2);
+		System.out.println("Is the number Greter Than 10 AND divisible by 2 "+p3.test(20));
+		
+		Predicate p4=p1.or(p2);
+		System.out.println("Is the number Greter Than 10 OR divisible by 2 "+p4.test(20));
+		
+		System.out.println("Is the number NOT Greter Than 10 AND NOT divisible by 2 "+p1.negate().and(p2.negate()).test(20));
+		
+	}
+}
+---------------------------------------------------------------------------
+	we can send predicate as the args
+	 public static void m1(predicate<integer>p, int[] x) {
+	  for(int x1:x) {
+	  if(p.test(x1))
+	  System.out.println(x1);
+	 }
+	}
+----------------------------------------------------------------------------
+
+		
+		
+		
+	================================================================================================================================================
+	INTERVIEW QUESTIONS:
+	1. what is lambada expression?
+	2. how to write the lambda exppression?
